@@ -6,8 +6,6 @@ import net.rubyeye.xmemcached.exception.MemcachedException;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class MemcachedExperiment {
@@ -21,18 +19,20 @@ public class MemcachedExperiment {
         builder.setHealSessionInterval(1000);
 
         MemcachedClient mc = builder.build();
+        mc.delete("foo0");
+        mc.delete("foo1");
+        mc.delete("foo2");
 
-        mc.set("foo", 300, "bar");
+        mc.set("foo0", 300, "bar");
         mc.set("foo1", 300, "fizz");
         mc.set("foo2", 300, "baz");
 
-        String val = mc.get("foo");
+        String val1 = mc.get("foo");
+        String val2 = mc.get("foo");
+        String val3 = mc.get("foo");
 
-        System.out.println("Added value: " + val);
-
-        Map<InetSocketAddress, Map<String, String>> stats = mc.getStatsByItem("items");
-        stats.forEach((s, i) -> {
-            i.keySet().forEach(c -> System.out.println(c.toString()));
-        });
+        System.out.println("Foo0: " + val1);
+        System.out.println("Foo1: " + val2);
+        System.out.println("Foo2: " + val3);
     }
 }
